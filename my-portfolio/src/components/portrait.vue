@@ -19,7 +19,7 @@ defineProps<{
     flex-direction: column;
     align-items: center;
     padding: 25px;
-    width: 230px;
+    width: 280px;
     flex-shrink: 0;
     z-index: 5;
     text-decoration: none;
@@ -41,7 +41,7 @@ defineProps<{
 .portrait-text {
     margin-top: 12px;
     text-align: center;
-    color: var(--Black, #312F27);
+    color: var(--Black);
     font-family: 'Caveat', cursive;
     font-size: 32px;
     font-weight: 700;

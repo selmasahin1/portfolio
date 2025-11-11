@@ -48,7 +48,7 @@ defineProps({
 }
 
 .project-title {
-    color: var(--Black, #312F27);
+    color: var(--Black);
     font-family: "Noto Sans Display";
     font-size: 24px;
     font-weight: 300;
@@ -56,7 +56,7 @@ defineProps({
 
 .project-description {
     margin-top: 5px;
-    color: var(--Black, #312F27);
+    color: var(--Black);
     font-family: "Noto Sans Display";
     font-size: 24px;
     font-style: normal;

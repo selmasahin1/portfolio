@@ -80,10 +80,10 @@ onMounted(() => {
     justify-content: center;
     padding-top: 450px;
     font-size: 48px;
-    color: var(--Black, #312F27);
+    color: var(--Black);
     font-family: 'Caveat', cursive;
     font-weight: 600;
-    z-index: 999;
+    z-index: 500;
     animation: bounce 2s ease-in-out infinite;
     background-color: transparent !important;
 }
@@ -141,5 +141,39 @@ onMounted(() => {
 
 .spacer {
     height: 50vh;
+}
+
+@media (max-width: 768px) {
+
+    .background-layer {
+        background-size: cover;
+        background-position: left top;
+    }
+
+    .intro-text {
+        margin-bottom: 20px;
+        padding-top: 250px;
+    }
+
+    .content {
+        padding: 50px;
+        gap: 20px;
+        padding-top: 20px;
+    }
+
+    .portrait-item {
+        width: 100%;
+        max-width: 300px;
+        font-size: 16px;
+    }
+
+    .spacer {
+        height: 10vh;
+    }
+
+    .intro-text img {
+        width: 80px;
+        height: 80px;
+    }
 }
 </style>

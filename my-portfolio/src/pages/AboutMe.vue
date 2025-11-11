@@ -25,11 +25,12 @@ import NavMenu from '@/components/NavMenu.vue'
     z-index: 1;
 }
 
-.page-root {
-    position: relative;
-    margin: 80px 120px;
-    min-height: 100vh;
-    width: calc(100% - 240px);
-}
+@media (max-width: 768px) {
 
+    .background-layer {
+        background-size: cover;
+        background-position: left top;
+    }
+
+}
 </style>

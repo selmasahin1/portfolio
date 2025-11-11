@@ -3,59 +3,158 @@
         <NavMenu />
         <div class="background-layer"></div>
         <div class="projects-grid">
-            <ProjectCard v-for="(project, index) in projects" :key="index" :image="project.image" :title="project.title"
-                :description="project.description" @click="openOverlay(project)" />
+            <ProjectCard v-for="(project, index) in projects" :key="index" :image="project.images && project.images[0]"
+                :title="project.title" :description="project.description" @click="openOverlay(project)" />
         </div>
         <div v-if="overlayVisible" class="overlay" @click="closeOverlay">
             <div class="overlay-content" @click.stop>
-                <h2>{{ selectedProject.title }}</h2>
-                <p>{{ selectedProject.description }}</p>
-                <img :src="selectedProject.image" alt="Project Image" />
+                <h2>{{ selectedProject.description }} ({{ selectedProject.year }})</h2>
+                <br />
+                <p><strong>Beschreibung:</strong> {{ selectedProject.detail }}</p>
+                <br />
+                <p><strong>Gebrauchte Technologien:</strong> {{ selectedProject.technologies }}</p>
+                <br />
+                <p><strong>Meine Rollen:</strong> {{ selectedProject.roles }}</p>
+                <br />
+                <p v-if="selectedProject.link">
+                    <strong>Projektlink:</strong> <a :href="selectedProject.link" target="_blank">{{
+                        selectedProject.link }}</a>
+                </p>
+                <video v-if="selectedProject.video" :src="selectedProject.video" controls class="overlay-video"></video>
+                <div v-else-if="selectedProject.images && selectedProject.images.length > 1" class="overlay-images">
+                    <img v-for="(image, index) in selectedProject.images.slice(1)" :key="index" :src="image" alt="Project Media"
+                        class="overlay-image" />
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, nextTick } from 'vue';
 import NavMenu from '@/components/NavMenu.vue';
 import ProjectCard from '@/components/ProjectCard.vue';
-import { ref } from 'vue';
 
 const projects = ref([
     {
-        image: '../assets/project1.png',
+        images: ['src/assets/fangis.png'],
         title: 'Webapp',
-        description: 'fangis - das Live-Action Spiel in der ganzen Schweiz',
+        year: '2025',
+        description: 'fangis',
+        detail: 'Unser Spiel bringt die Dynamik von „Fangen“ in die digitale Welt – über eine App, die die reale Stadt zur interaktiven Spielfläche macht. Spieler:innen bewegen sich in Echtzeit auf einer Karte, nehmen Rollen ein (Runner vs. Catcher), absolvieren Challenges per Kamera und GPS und sammeln Punkte. Über eine moderne PWA mit Live-Standort entsteht ein bewegungsintensives, soziales und wettbewerbsorientiertes Spielerlebnis – schweizweit, sofort spielbar, komplett per Smartphone.',
+        technologies: 'Vue.js, Node.js',
+        roles: 'Lead Developer - Teamarbeit',
+        link: 'https://fangis.app',
+        video: '',
     },
     {
-        image: '../assets/project2.png',
-        title: 'Film',
-        description: 'Ein Tag in der Markthalle 9 - Ein Film in Berlin',
-    },
-    {
-        image: '../assets/project3.png',
+        images: ['src/assets/PS.webp'],
         title: 'Website',
-        description: 'Website für Physio & Sport BackUp ',
+        year: '2023',
+        description: 'Physio & Sport BackUp',
+        detail: 'Entwicklung und Gestaltung der Website für Physio & Sport BackUp',
+        technologies: 'Angular',
+        roles: 'Entwicklerin - Einzelarbeit',
+        link: 'https://psbackup.ch/home',
+        video: '',
     },
     {
-        image: '../assets/project4.png',
-        title: 'Fotografie',
-        description: 'Analog Fotografie - Wie entwickelt man einen Film selbst?',
+        images: [],
+        title: 'Game',
+        year: '2025',
+        description: 'Worldexplorer',
+        detail: 'Für dieses Studienprojekt habe ich eine Website entwickelt, wo man die Weltkarte entdecken kann.',
+        technologies: 'Flutter, Dart',
+        roles: 'Entwicklerin - Einzelarbeit',
+        link: 'https://worldexplorer.selmasahin.ch',
+        video: '',
     },
+    {
+        images: ['src/assets/MH9.png'],
+        title: 'Film',
+        year: '2024',
+        description: 'Ein Tag in der Markthalle 9',
+        detail: 'Im Rahmen des Moduls Audiovisuelles Erzählen haben wir in Berlin einen Kurzfilm gedreht, der das tägliche Leben in der Markthalle 9 dokumentiert.',
+        technologies: 'Premiere Pro',
+        roles: 'Schnitt, Voice-over, Kamera',
+        link: '',
+        video: 'src/assets/MH9Video.mp4',
+    },
+    {
+        images: ['src/assets/AppIcon.png', 'src/assets/SwipeKeep.gif', 'src/assets/SwipeDelete.gif', 'src/assets/ButtonKeep.gif'],
+        title: 'IOS App',
+        year: '2025',
+        description: 'Photoswiper',
+        detail: 'Dieses digezz Projekt habe ich erstellt um meine Fähigkeiten in der iOS-Entwicklung zu verbessern. Die App ermöglicht es Benutzern, durch ihre Fotos zu swipen und sie zu organisieren.',
+        technologies: 'xCode, Swift',
+        roles: 'Entwicklerin - Einzelarbeit',
+        link: '',
+        video: '',
+    }
 ]);
 
 const overlayVisible = ref(false);
-const selectedProject = ref({ title: '', description: '', image: '' });
+const selectedProject = ref({
+    title: '',
+    year: '',
+    description: '',
+    detail: '',
+    technologies: '',
+    roles: '',
+    link: '',
+    video: '',
+    images: [] as string[],
+});
 
-const openOverlay = (project: { title: string; description: string; image: string }) => {
-    selectedProject.value = project;
+const openOverlay = (project: typeof projects.value[0]) => {
+    selectedProject.value = { ...project, images: project.images || [] };
     overlayVisible.value = true;
 };
 
 const closeOverlay = () => {
     overlayVisible.value = false;
-    selectedProject.value = { title: '', description: '', image: '' };
+    selectedProject.value = {
+        title: '',
+        year: '',
+        description: '',
+        detail: '',
+        technologies: '',
+        roles: '',
+        link: '',
+        video: '',
+        images: [],
+    };
 };
+
+onMounted(() => {
+    // Use nextTick to ensure DOM is fully rendered
+    nextTick(() => {
+        const projectCards = document.querySelectorAll('.projects-grid > div');
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const index = Array.from(projectCards).indexOf(entry.target as Element);
+                        const delay = index * 200;
+
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, delay);
+                    }
+                });
+            },
+            {
+                threshold: 0.2,
+            }
+        );
+
+        // Observe all project cards
+        projectCards.forEach((card) => {
+            observer.observe(card);
+        });
+    });
+});
 </script>
 
 <style scoped>
@@ -74,13 +173,6 @@ const closeOverlay = () => {
     z-index: 1;
 }
 
-.page-root {
-    position: relative;
-    margin: 80px 120px;
-    min-height: 100vh;
-    width: calc(100% - 240px);
-}
-
 .projects-grid {
     display: flex;
     flex-wrap: wrap;
@@ -90,7 +182,34 @@ const closeOverlay = () => {
     z-index: 2;
     position: relative;
     background-color: transparent !important;
-    padding-top: 300px;
+    padding-top: 200px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 0.8;
+        transform: translateY(0);
+    }
+}
+
+.projects-grid > div {
+    opacity: 0;
+    transform: translateY(50px);
+    animation: none;
+}
+
+.projects-grid > div.visible {
+    opacity: 0.8;
+    transform: translateY(0);
+    animation: fadeInUp 0.8s ease-in-out forwards;
+}
+
+.projects-grid > div.visible:hover {
+    transform: translateY(-10px);
 }
 
 .overlay {
@@ -103,20 +222,60 @@ const closeOverlay = () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 3;
+    font-family: "Noto Sans Display";
+    color: var(--Black);
+    z-index: 999;
 }
 
 .overlay-content {
-    background: white;
+    background: var(--Beige);
     padding: 20px;
     border-radius: 8px;
-    max-width: 500px;
-    text-align: center;
+    max-width: 800px;
 }
 
 .overlay-content img {
-    max-width: 100%;
+    max-width: 200px;
     border-radius: 8px;
     margin-top: 10px;
+}
+
+.overlay-video {
+    width: 100%;
+    height: auto;
+    max-width: 60vw;
+    border: none;
+    border-radius: 8px;
+}
+
+.overlay-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.overlay-image {
+    max-width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+
+    .background-layer {
+        background-size: cover;
+        background-position: left top;
+    }
+
+    .project-card {
+        width: 90%;
+    }
+
+    .projects-grid {
+        gap: 20px;
+        padding-bottom: 20px;
+    }
 }
 </style>
