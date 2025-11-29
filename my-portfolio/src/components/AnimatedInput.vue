@@ -64,7 +64,7 @@ defineExpose({
 
 onMounted(() => {
     if (props.required) {
-        console.log(`${props.label} is required`);
+        // Field is required - validation handled by the component
     }
 });
 </script>

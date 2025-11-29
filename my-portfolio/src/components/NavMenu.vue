@@ -67,7 +67,7 @@ const closeMenu = () => {
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     gap: 15px;
-    z-index: 9999;
+    z-index: 99999;
 }
 
 .nav-link {

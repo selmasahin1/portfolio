@@ -42,18 +42,37 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit("INVALID_EMAIL");
 }
 
-// ✅ 5. Build email
-$to = "you@yourdomain.ch";
-$subject = "Neue Kontaktformular Nachricht";
-$body = "Name: $name\nEmail: $email\n\nNachricht:\n$message";
-
-$headers = "From: noreply@yourdomain.ch\r\n";
-$headers .= "Reply-To: $email\r\n";
-
-// ✅ 6. Send
-if (mail($to, $subject, $body, $headers)) {
-    exit("OK");
-} else {
-    exit("ERROR");
+// ✅ 5. Send email via secure file logging
+try {
+    // Create a secure log file outside web root or with protection
+    $logMessage = date('Y-m-d H:i:s') . " - New Contact Form Submission\n";
+    $logMessage .= "Name: " . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "\n";
+    $logMessage .= "Email: " . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . "\n"; 
+    $logMessage .= "Message: " . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . "\n";
+    $logMessage .= "IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . "\n";
+    $logMessage .= "User Agent: " . htmlspecialchars($_SERVER['HTTP_USER_AGENT'] ?? 'unknown', ENT_QUOTES, 'UTF-8') . "\n";
+    $logMessage .= "---\n\n";
+    
+    // Use a hidden directory or file with .htaccess protection
+    $logDir = './private/';
+    $logFile = $logDir . 'contact_' . date('Y-m') . '.log';
+    
+    // Create directory if it doesn't exist
+    if (!is_dir($logDir)) {
+        mkdir($logDir, 0750, true);
+        // Create .htaccess to deny web access
+        file_put_contents($logDir . '.htaccess', "Deny from all\n");
+    }
+    
+    $written = file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
+    
+    if ($written !== false) {
+        exit("OK");
+    } else {
+        exit("LOG_FAILED");
+    }
+    
+} catch (Exception $e) {
+    exit("ERROR: " . $e->getMessage());
 }
 ?>

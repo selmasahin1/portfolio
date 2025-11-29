@@ -1,15 +1,19 @@
 <template>
-    <router-link :to="route" class="portrait">
+    <router-link v-if="route" :to="route" class="portrait">
         <img :src="image" :alt="text" class="portrait-image" />
         <p class="portrait-text">{{ text }}</p>
     </router-link>
+    <div v-else class="portrait">
+        <img :src="image" :alt="text" class="portrait-image" />
+        <p class="portrait-text">{{ text }}</p>
+    </div>
 </template>
 
 <script setup lang="ts">
 defineProps<{
     image: string
     text: string
-    route: string
+    route?: string
 }>()
 </script>
 
@@ -25,6 +29,9 @@ defineProps<{
     text-decoration: none;
     cursor: pointer;
     transition: transform 0.2s ease;
+    background-color: var(--Beige);
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .portrait:hover {
@@ -32,8 +39,8 @@ defineProps<{
 }
 
 .portrait-image {
-    width: 100%;
-    height: auto;
+    width: 225px;
+    height: 345px;
     object-fit: cover;
     border-radius: 8px;
 }

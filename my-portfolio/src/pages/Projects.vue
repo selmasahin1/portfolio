@@ -20,12 +20,20 @@
                     <strong>Projektlink:</strong> <a :href="selectedProject.link" target="_blank">{{
                         selectedProject.link }}</a>
                 </p>
-                <video v-if="selectedProject.video" :src="selectedProject.video" controls class="overlay-video"></video>
+                <iframe v-if="selectedProject.video" 
+                    :src="`https://www.youtube.com/embed/${selectedProject.video}`" 
+                    class="overlay-video"
+                    frameborder="0" 
+                    allowfullscreen>
+                </iframe>
                 <div v-else-if="selectedProject.images && selectedProject.images.length > 1" class="overlay-images">
-                    <img v-for="(image, index) in selectedProject.images.slice(1)" :key="index" :src="image" alt="Project Media"
-                        class="overlay-image" />
+                    <img v-for="(image, index) in selectedProject.images.slice(1)" :key="index" :src="image"
+                        alt="Project Media" class="overlay-image" />
                 </div>
             </div>
+        </div>
+        <div class="copyright">
+            © Selma Sahin
         </div>
     </div>
 </template>
@@ -34,10 +42,29 @@
 import { ref, onMounted, nextTick } from 'vue';
 import NavMenu from '@/components/NavMenu.vue';
 import ProjectCard from '@/components/ProjectCard.vue';
+import fangisImg from '../assets/fangis.webp'
+import psImg from '../assets/ps.webp'
+import mh9Img from '../assets/mh9.webp'
+import appIconImg from '../assets/appicon.webp'
+import swipeKeepImg from '../assets/swipekeep.gif'
+import swipeDeleteImg from '../assets/swipedelete.gif'
+import buttonKeepImg from '../assets/buttonkeep.gif'
 
-const projects = ref([
+interface Project {
+    images: string[];
+    title: string;
+    year: string;
+    description: string;
+    detail: string;
+    technologies: string;
+    roles: string;
+    link?: string;
+    video?: string;
+}
+
+const projects = ref<Project[]>([
     {
-        images: ['src/assets/fangis.png'],
+        images: [fangisImg],
         title: 'Webapp',
         year: '2025',
         description: 'fangis',
@@ -45,10 +72,9 @@ const projects = ref([
         technologies: 'Vue.js, Node.js',
         roles: 'Lead Developer - Teamarbeit',
         link: 'https://fangis.app',
-        video: '',
     },
     {
-        images: ['src/assets/PS.webp'],
+        images: [psImg],
         title: 'Website',
         year: '2023',
         description: 'Physio & Sport BackUp',
@@ -56,7 +82,25 @@ const projects = ref([
         technologies: 'Angular',
         roles: 'Entwicklerin - Einzelarbeit',
         link: 'https://psbackup.ch/home',
-        video: '',
+    },
+    {
+        images: [mh9Img],
+        title: 'Film',
+        year: '2024',
+        description: 'Ein Tag in der Markthalle 9',
+        detail: 'Im Rahmen des Moduls Audiovisuelles Erzählen haben wir in Berlin einen Kurzfilm gedreht, der das tägliche Leben in der Markthalle 9 dokumentiert.',
+        technologies: 'Premiere Pro',
+        roles: 'Schnitt, Voice-over, Kamera',
+        video: 'hV32e24igqA', // Replace with your actual YouTube video ID
+    },
+    {
+        images: [appIconImg, swipeKeepImg, swipeDeleteImg],
+        title: 'IOS App',
+        year: '2025',
+        description: 'Photoswiper',
+        detail: 'Dieses digezz Projekt habe ich erstellt um meine Fähigkeiten in der iOS-Entwicklung zu verbessern. Die App ermöglicht es Benutzern, durch ihre Fotos zu swipen und sie zu organisieren.',
+        technologies: 'xCode, Swift',
+        roles: 'Entwicklerin - Einzelarbeit',
     },
     {
         images: [],
@@ -67,34 +111,11 @@ const projects = ref([
         technologies: 'Flutter, Dart',
         roles: 'Entwicklerin - Einzelarbeit',
         link: 'https://worldexplorer.selmasahin.ch',
-        video: '',
-    },
-    {
-        images: ['src/assets/MH9.png'],
-        title: 'Film',
-        year: '2024',
-        description: 'Ein Tag in der Markthalle 9',
-        detail: 'Im Rahmen des Moduls Audiovisuelles Erzählen haben wir in Berlin einen Kurzfilm gedreht, der das tägliche Leben in der Markthalle 9 dokumentiert.',
-        technologies: 'Premiere Pro',
-        roles: 'Schnitt, Voice-over, Kamera',
-        link: '',
-        video: 'src/assets/MH9Video.mp4',
-    },
-    {
-        images: ['src/assets/AppIcon.png', 'src/assets/SwipeKeep.gif', 'src/assets/SwipeDelete.gif', 'src/assets/ButtonKeep.gif'],
-        title: 'IOS App',
-        year: '2025',
-        description: 'Photoswiper',
-        detail: 'Dieses digezz Projekt habe ich erstellt um meine Fähigkeiten in der iOS-Entwicklung zu verbessern. Die App ermöglicht es Benutzern, durch ihre Fotos zu swipen und sie zu organisieren.',
-        technologies: 'xCode, Swift',
-        roles: 'Entwicklerin - Einzelarbeit',
-        link: '',
-        video: '',
     }
 ]);
 
 const overlayVisible = ref(false);
-const selectedProject = ref({
+const selectedProject = ref<Project>({
     title: '',
     year: '',
     description: '',
@@ -106,7 +127,7 @@ const selectedProject = ref({
     images: [] as string[],
 });
 
-const openOverlay = (project: typeof projects.value[0]) => {
+const openOverlay = (project: Project) => {
     selectedProject.value = { ...project, images: project.images || [] };
     overlayVisible.value = true;
 };
@@ -164,7 +185,7 @@ onMounted(() => {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('../assets/Projects.png');
+    background-image: url('../assets/Projects.webp');
     background-repeat: no-repeat;
     background-position: center top;
     background-size: 100% auto;
@@ -190,25 +211,26 @@ onMounted(() => {
         opacity: 0;
         transform: translateY(50px);
     }
+
     to {
-        opacity: 0.8;
+        opacity: 1;
         transform: translateY(0);
     }
 }
 
-.projects-grid > div {
+.projects-grid>div {
     opacity: 0;
     transform: translateY(50px);
     animation: none;
 }
 
-.projects-grid > div.visible {
-    opacity: 0.8;
+.projects-grid>div.visible {
+    opacity: 1;
     transform: translateY(0);
     animation: fadeInUp 0.8s ease-in-out forwards;
 }
 
-.projects-grid > div.visible:hover {
+.projects-grid>div.visible:hover {
     transform: translateY(-10px);
 }
 
@@ -242,8 +264,8 @@ onMounted(() => {
 
 .overlay-video {
     width: 100%;
-    height: auto;
-    max-width: 60vw;
+    height: 400px;
+    max-width: 95vw;
     border: none;
     border-radius: 8px;
 }
@@ -257,7 +279,7 @@ onMounted(() => {
 }
 
 .overlay-image {
-    max-width: 100%;
+    max-height: 30vh;
     border-radius: 8px;
     object-fit: cover;
 }

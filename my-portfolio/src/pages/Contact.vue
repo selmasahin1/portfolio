@@ -30,6 +30,9 @@
                 </form>
             </div>
         </div>
+        <div class="copyright">
+            © Selma Sahin
+        </div>
     </div>
 </template>
 
@@ -81,11 +84,11 @@ async function submitForm() {
 
     switch (result) {
         case "OK":
-            status.value = "✅ Nachricht erfolgreich gesendet!"
+            status.value = "Nachricht erfolgreich gesendet!"
             formData.value = { name: "", email: "", message: "" }
             break
         default:
-            status.value = "❌ Fehler beim Senden."
+            status.value = `Nachricht konnte nicht gesendet werden. Bitte versuche es später erneut.`
             break
     }
 
@@ -101,7 +104,7 @@ async function submitForm() {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('../assets/Contact.png');
+    background-image: url('../assets/Contact.webp');
     background-repeat: no-repeat;
     background-position: center top;
     background-size: 100% auto;

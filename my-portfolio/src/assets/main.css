@@ -32,3 +32,16 @@ html {
         width: 100%;
     }
 }
+
+.copyright {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: var(--Black);
+    font-size: 12px;
+    font-family: 'Noto Sans Display', sans-serif;
+    background-color: transparent;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 1000;
+}

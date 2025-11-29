@@ -15,6 +15,9 @@
             <portrait :image="projectsImg" text="Projects" route="/Projects" class="portrait-item" />
             <portrait :image="contactImg" text="Contact" route="/Contact" class="portrait-item" />
         </div>
+        <div class="copyright">
+            © Selma Sahin
+        </div>
     </div>
 </template>
 
@@ -22,9 +25,9 @@
 import { ref, onMounted } from 'vue'
 import Portrait from '@/components/portrait.vue'
 import NavMenu from '@/components/NavMenu.vue'
-import aboutMeImg from '../assets/AboutMe.jpg'
-import projectsImg from '../assets/projects.jpg'
-import contactImg from '../assets/contact.jpg'
+import aboutMeImg from '../assets/AboutMe.webp'
+import projectsImg from '../assets/projectsGrainy.webp'
+import contactImg from '../assets/contactGrainy.webp'
 
 const contentRef = ref<HTMLElement | null>(null)
 
@@ -63,7 +66,7 @@ onMounted(() => {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('../assets/SelmaSahin.png');
+    background-image: url('../assets/SelmaSahin.webp');
     background-repeat: no-repeat;
     background-position: center top;
     background-size: 100% auto;
@@ -120,7 +123,7 @@ onMounted(() => {
     flex-wrap: wrap;
     gap: 100px;
     justify-content: center;
-    z-index: 999;
+    z-index: 60;
     background-color: transparent !important;
 }
 
