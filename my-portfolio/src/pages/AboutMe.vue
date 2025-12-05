@@ -24,12 +24,12 @@
                 <p>In meinem Multimedia-Production-Studium habe ich verschiedenste Programme und Skills gelernt.
                     Unter anderem:</p>
                 <ul>
-                    <li>Premier Pro</li>
-                    <li>In Design</li>
+                    <li>Premiere Pro</li>
+                    <li>InDesign</li>
                     <li>Illustrator</li>
                     <li>Figma</li>
                     <li>Blender</li>
-                    <li>Touchdesigner</li>
+                    <li>TouchDesigner</li>
                 </ul>
             </div>
 
@@ -59,12 +59,13 @@ import { ref, onMounted } from 'vue'
 import NavMenu from '@/components/NavMenu.vue'
 import Portrait from '@/components/portrait.vue'
 import aboutMeImg from '../assets/aboutMe1.webp'
-import aboutMeImg2 from '../assets/AboutMe4.webp'
 import aboutMeImg3 from '../assets/aboutMe3.webp'
+import ImBild from '../assets/IM.webp'
+
 const portraits = [
     { image: aboutMeImg, text: 'Selma Sahin' },
-    { image: aboutMeImg2, text: 'MMP-Studentin' },
-    { image: aboutMeImg3, text: 'Entwicklerin' }
+    { image: aboutMeImg3, text: 'MMP-Studentin' },
+    { image: ImBild, text: 'Entwicklerin' }
 
 ]
 

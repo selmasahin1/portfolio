@@ -11,9 +11,9 @@
         <div class="spacer"></div>
 
         <div id="content" class="content" ref="contentRef">
-            <portrait :image="aboutMeImg" text="Foto von Selma mit einem Oscar" route="/AboutMe" class="portrait-item" />
-            <portrait :image="projectsImg" text="Foto von Selma beim Fotografieren" route="/Projects" class="portrait-item" />
-            <portrait :image="contactImg" text="Foto von Selma auf einem Kameraschieber" route="/Contact" class="portrait-item" />
+            <portrait :image="aboutMeImg" text="About Me" route="/AboutMe" class="portrait-item" />
+            <portrait :image="projectsImg" text="Projects" route="/Projects" class="portrait-item" />
+            <portrait :image="contactImg" text="Contact" route="/Contact" class="portrait-item" />
         </div>
         <div class="copyright">
             © Selma Sahin
