@@ -10,9 +10,8 @@
 
             <div v-if="currentPortraitIndex === 0" class="content-section">
                 <h2>That's me</h2>
-                <p>Ich bin Multimedia-Production-Studentin mit Fokus auf Media Applications. Ich arbeite gerne an
-                    digitalen Produkten und lerne regelmässig neue Frameworks und Tools.</p>
-                <p>Mein Linkedin:</p>
+                <p>Ich bin Creative Developerin und verbinde mit meinem Background als Informatikerin und dem
+                    MMP-Studium "The Best of Both Worlds"</p>
                 <div class="linkedin">
                     <a :href="linkedInUrl" target="_blank" rel="noopener noreferrer">
                         <img src="../assets/linkedin.png" alt="Link to Linkedin" class="linkedin-img" />
@@ -20,12 +19,13 @@
                 </div>
             </div>
             <div v-if="currentPortraitIndex === 1" class="content-section">
-                <h2>MMP-Stuff</h2>
+                <h2>MMP-Things</h2>
                 <p>In meinem Multimedia-Production-Studium habe ich verschiedenste Programme und Skills gelernt.
                     Unter anderem:</p>
                 <ul>
                     <li>Premiere Pro</li>
                     <li>InDesign</li>
+                    <li>Photoshop</li>
                     <li>Illustrator</li>
                     <li>Figma</li>
                     <li>Blender</li>
@@ -48,16 +48,16 @@
                 </ul>
             </div>
         </div>
-        <div class="copyright">
-            © Selma Sahin
-        </div>
     </div>
+    <Footer></Footer>
+
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import NavMenu from '@/components/NavMenu.vue'
 import Portrait from '@/components/portrait.vue'
+import Footer from '@/components/Footer.vue'
 import aboutMeImg from '../assets/aboutMe1.webp'
 import aboutMeImg3 from '../assets/aboutMe3.webp'
 import ImBild from '../assets/IM.webp'

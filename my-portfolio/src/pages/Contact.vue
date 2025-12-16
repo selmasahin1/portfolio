@@ -30,10 +30,8 @@
                 </form>
             </div>
         </div>
-        <div class="copyright">
-            © Selma Sahin
-        </div>
     </div>
+    <Footer></Footer>
 </template>
 
 
@@ -41,6 +39,7 @@
 import NavMenu from '@/components/NavMenu.vue'
 import AnimatedInput from '@/components/AnimatedInput.vue'
 import AnimatedTextarea from '@/components/AnimatedTextarea.vue'
+import Footer from '@/components/Footer.vue'
 import { ref, onMounted } from 'vue'
 
 const formData = ref({

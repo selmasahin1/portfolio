@@ -15,9 +15,7 @@
             <portrait :image="projectsImg" text="Projects" route="/Projects" class="portrait-item" />
             <portrait :image="contactImg" text="Contact" route="/Contact" class="portrait-item" />
         </div>
-        <div class="copyright">
-            © Selma Sahin
-        </div>
+        <Footer />
     </div>
 </template>
 
@@ -25,6 +23,7 @@
 import { ref, onMounted } from 'vue'
 import Portrait from '@/components/portrait.vue'
 import NavMenu from '@/components/NavMenu.vue'
+import Footer from '@/components/Footer.vue'
 import aboutMeImg from '../assets/AboutMe.webp'
 import projectsImg from '../assets/projectsGrainy.webp'
 import contactImg from '../assets/contactGrainy.webp'

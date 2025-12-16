@@ -8,6 +8,7 @@
         </div>
         <div v-if="overlayVisible" class="overlay" @click="closeOverlay">
             <div class="overlay-content" @click.stop>
+                <button class="close-btn" @click="closeOverlay">×</button>
                 <h2>{{ selectedProject.description }} ({{ selectedProject.year }})</h2>
                 <br />
                 <p><strong>Beschreibung:</strong> {{ selectedProject.detail }}</p>
@@ -32,16 +33,15 @@
                 </div>
             </div>
         </div>
-        <div class="copyright">
-            © Selma Sahin
-        </div>
     </div>
+    <Footer></Footer>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue';
 import NavMenu from '@/components/NavMenu.vue';
 import ProjectCard from '@/components/ProjectCard.vue';
+import Footer from '@/components/Footer.vue';
 import fangisImg from '../assets/fangis.webp'
 import psImg from '../assets/ps.webp'
 import mh9Img from '../assets/mh9.webp'
@@ -254,6 +254,32 @@ onMounted(() => {
     padding: 20px;
     border-radius: 8px;
     max-width: 800px;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--Black);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .overlay-content img {
@@ -264,7 +290,7 @@ onMounted(() => {
 
 .overlay-video {
     width: 100%;
-    height: 400px;
+    height: auto;
     max-width: 95vw;
     border: none;
     border-radius: 8px;
