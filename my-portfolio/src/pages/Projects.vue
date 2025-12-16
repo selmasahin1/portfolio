@@ -22,7 +22,7 @@
                         selectedProject.link }}</a>
                 </p>
                 <iframe v-if="selectedProject.video" 
-                    :src="`https://www.youtube.com/embed/${selectedProject.video}`" 
+                    :src="`https://www.youtube-nocookie.com/embed/${selectedProject.video}`" 
                     class="overlay-video"
                     frameborder="0" 
                     allowfullscreen>
@@ -48,7 +48,6 @@ import mh9Img from '../assets/mh9.webp'
 import appIconImg from '../assets/appicon.webp'
 import swipeKeepImg from '../assets/swipekeep.gif'
 import swipeDeleteImg from '../assets/swipedelete.gif'
-import buttonKeepImg from '../assets/buttonkeep.gif'
 
 interface Project {
     images: string[];
@@ -91,7 +90,7 @@ const projects = ref<Project[]>([
         detail: 'Im Rahmen des Moduls Audiovisuelles Erzählen haben wir in Berlin einen Kurzfilm gedreht, der das tägliche Leben in der Markthalle 9 dokumentiert.',
         technologies: 'Premiere Pro',
         roles: 'Schnitt, Voice-over, Kamera',
-        video: 'hV32e24igqA', // Replace with your actual YouTube video ID
+        video: 'hV32e24igqA',
     },
     {
         images: [appIconImg, swipeKeepImg, swipeDeleteImg],
