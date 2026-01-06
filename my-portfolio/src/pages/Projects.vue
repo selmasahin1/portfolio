@@ -43,6 +43,7 @@ import NavMenu from '@/components/NavMenu.vue';
 import ProjectCard from '@/components/ProjectCard.vue';
 import Footer from '@/components/Footer.vue';
 import fangisImg from '../assets/fangis.webp'
+import worldexplorerImg from '../assets/worldexplorer.svg'
 import psImg from '../assets/ps.webp'
 import mh9Img from '../assets/mh9.webp'
 import appIconImg from '../assets/appicon.webp'
@@ -102,11 +103,11 @@ const projects = ref<Project[]>([
         roles: 'Entwicklerin - Einzelarbeit',
     },
     {
-        images: [],
+        images: [worldexplorerImg],
         title: 'Game',
         year: '2025',
         description: 'Worldexplorer',
-        detail: 'Für dieses Studienprojekt habe ich eine Website entwickelt, wo man die Weltkarte entdecken kann.',
+        detail: 'Für dieses Studienprojekt habe ich eine Website entwickelt, wo man die Weltkarte entdecken kann. Es ist ein interaktives Spiel, das mit Flutter und Dart erstellt wurde.',
         technologies: 'Flutter, Dart',
         roles: 'Entwicklerin - Einzelarbeit',
         link: 'https://worldexplorer.selmasahin.ch',
@@ -289,7 +290,7 @@ onMounted(() => {
 
 .overlay-video {
     width: 100%;
-    height: auto;
+    height: 50vh;
     max-width: 95vw;
     border: none;
     border-radius: 8px;
@@ -306,7 +307,6 @@ onMounted(() => {
 .overlay-image {
     max-height: 30vh;
     border-radius: 8px;
-    object-fit: cover;
 }
 
 @media (max-width: 768px) {
