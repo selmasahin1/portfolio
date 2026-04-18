@@ -5,7 +5,7 @@
 
         <div class="contact-content">
             <div class="left">
-                <p>Let's get in touch</p>
+                <p>{{ t('contact.title') }}</p>
                 <a href="#content" class="arrow-link" @click="focusNameInput">
                     <img src="../assets/arrow_right.svg" alt="right arrow" />
                 </a>
@@ -14,16 +14,16 @@
             <div class="right">
                 <form @submit.prevent="submitForm" class="contact-form">
 
-                    <AnimatedInput ref="nameInput" v-model="formData.name" label="Name" :required="true" />
+                    <AnimatedInput ref="nameInput" v-model="formData.name" :label="t('contact.name')" :required="true" />
 
-                    <AnimatedInput v-model="formData.email" label="Email" type="email" :required="true" />
+                    <AnimatedInput v-model="formData.email" :label="t('contact.email')" type="email" :required="true" />
 
-                    <AnimatedTextarea v-model="formData.message" label="Nachricht" :rows="5" :required="true" />
+                    <AnimatedTextarea v-model="formData.message" :label="t('contact.message')" :rows="5" :required="true" />
 
                     <input v-model="hp" class="hp-field" tabindex="-1" autocomplete="off" />
 
                     <button type="submit" class="submit-btn" :disabled="sending">
-                        {{ sending ? "Senden..." : "Senden" }}
+                        {{ sending ? "Senden..." : t('contact.send') }}
                     </button>
 
                     <p class="status">{{ status }}</p>
@@ -41,6 +41,9 @@ import AnimatedInput from '@/components/AnimatedInput.vue'
 import AnimatedTextarea from '@/components/AnimatedTextarea.vue'
 import Footer from '@/components/Footer.vue'
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n();
 
 const formData = ref({
     name: '',

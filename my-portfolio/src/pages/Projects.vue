@@ -4,28 +4,30 @@
         <div class="background-layer"></div>
         <div class="projects-grid">
             <ProjectCard v-for="(project, index) in projects" :key="index" :image="project.images && project.images[0]"
-                :title="project.title" :description="project.description" @click="openOverlay(project)" />
+                :title="t(`projects.${project.key}.title`)" :description="t(`projects.${project.key}.description`)" @click="openOverlay(project)" class="project-card-item" />
         </div>
-        <div v-if="overlayVisible" class="overlay" @click="closeOverlay">
+        <div v-if="overlayVisible && selectedProject" class="overlay" @click="closeOverlay">
             <div class="overlay-content" @click.stop>
                 <button class="close-btn" @click="closeOverlay">×</button>
                 <h2>{{ selectedProject.description }} ({{ selectedProject.year }})</h2>
                 <br />
-                <p><strong>Beschreibung:</strong> {{ selectedProject.detail }}</p>
+                <p><strong>{{ t('projects.overlay.description') }}</strong> {{ selectedProject.detail }}</p>
                 <br />
-                <p><strong>Gebrauchte Technologien:</strong> {{ selectedProject.technologies }}</p>
+                <p><strong>{{ t('projects.overlay.technologies') }}</strong> {{ selectedProject.technologies }}</p>
                 <br />
-                <p><strong>Meine Rollen:</strong> {{ selectedProject.roles }}</p>
+                <p><strong>{{ t('projects.overlay.roles') }}</strong> {{ selectedProject.roles }}</p>
                 <br />
                 <p v-if="selectedProject.link">
-                    <strong>Projektlink:</strong> <a :href="selectedProject.link" target="_blank">{{
-                        selectedProject.link }}</a>
+                    <strong>{{ t('projects.overlay.projectLink') }}</strong> <a :href="selectedProject.link" target="_blank">{{
+                        selectedProject.link }}</a><br><br>
                 </p>
-                <iframe v-if="selectedProject.video" 
-                    :src="`https://www.youtube-nocookie.com/embed/${selectedProject.video}`" 
-                    class="overlay-video"
-                    frameborder="0" 
-                    allowfullscreen>
+                <p v-if="selectedProject.digezzLink">
+                    <strong>{{ t('projects.overlay.digezzLink') }}</strong> <a :href="selectedProject.digezzLink" target="_blank">{{
+                        selectedProject.digezzLink }}</a>
+                </p>
+                <iframe v-if="selectedProject.video"
+                    :src="`https://www.youtube-nocookie.com/embed/${selectedProject.video}`" class="overlay-video"
+                    frameborder="0" allowfullscreen>
                 </iframe>
                 <div v-else-if="selectedProject.images && selectedProject.images.length > 1" class="overlay-images">
                     <img v-for="(image, index) in selectedProject.images.slice(1)" :key="index" :src="image"
@@ -39,6 +41,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 import NavMenu from '@/components/NavMenu.vue';
 import ProjectCard from '@/components/ProjectCard.vue';
 import Footer from '@/components/Footer.vue';
@@ -50,130 +53,103 @@ import appIconImg from '../assets/appicon.webp'
 import swipeKeepImg from '../assets/swipekeep.gif'
 import swipeDeleteImg from '../assets/swipedelete.gif'
 
+const { t } = useI18n();
+
 interface Project {
+    key: string;
     images: string[];
-    title: string;
     year: string;
-    description: string;
-    detail: string;
     technologies: string;
-    roles: string;
     link?: string;
     video?: string;
+    digezzLink?: string;
+}
+
+interface SelectedProject extends Project {
+    title: string;
+    description: string;
+    detail: string;
+    roles: string;
 }
 
 const projects = ref<Project[]>([
     {
+        key: 'fangis',
         images: [fangisImg],
-        title: 'Webapp',
         year: '2025',
-        description: 'fangis',
-        detail: 'Unser Spiel bringt die Dynamik von „Fangen“ in die digitale Welt – über eine App, die die reale Stadt zur interaktiven Spielfläche macht. Spieler:innen bewegen sich in Echtzeit auf einer Karte, nehmen Rollen ein (Runner vs. Catcher), absolvieren Challenges per Kamera und GPS und sammeln Punkte. Über eine moderne PWA mit Live-Standort entsteht ein bewegungsintensives, soziales und wettbewerbsorientiertes Spielerlebnis – schweizweit, sofort spielbar, komplett per Smartphone.',
         technologies: 'Vue.js, Node.js',
-        roles: 'Lead Developer - Teamarbeit',
         link: 'https://fangis.app',
     },
     {
+        key: 'psbackup',
         images: [psImg],
-        title: 'Website',
         year: '2023',
-        description: 'Physio & Sport BackUp',
-        detail: 'Entwicklung und Gestaltung der Website für Physio & Sport BackUp',
         technologies: 'Angular',
-        roles: 'Entwicklerin - Einzelarbeit',
         link: 'https://psbackup.ch/home',
+        digezzLink: 'https://www.digezz.ch/angular-fuer-anfaenger/'
     },
     {
+        key: 'mh9',
         images: [mh9Img],
-        title: 'Film',
         year: '2024',
-        description: 'Ein Tag in der Markthalle 9',
-        detail: 'Im Rahmen des Moduls Audiovisuelles Erzählen haben wir in Berlin einen Kurzfilm gedreht, der das tägliche Leben in der Markthalle 9 dokumentiert.',
         technologies: 'Premiere Pro',
-        roles: 'Schnitt, Voice-over, Kamera',
         video: 'hV32e24igqA',
     },
     {
+        key: 'photoswiper',
         images: [appIconImg, swipeKeepImg, swipeDeleteImg],
-        title: 'IOS App',
         year: '2025',
-        description: 'Photoswiper',
-        detail: 'Dieses digezz Projekt habe ich erstellt um meine Fähigkeiten in der iOS-Entwicklung zu verbessern. Die App ermöglicht es Benutzern, durch ihre Fotos zu swipen und sie zu organisieren.',
         technologies: 'xCode, Swift',
-        roles: 'Entwicklerin - Einzelarbeit',
+        digezzLink: 'https://www.digezz.ch/photoswiper-aufraeumen-mit-einem-wisch/'
     },
     {
+        key: 'worldexplorer',
         images: [worldexplorerImg],
-        title: 'Game',
         year: '2025',
-        description: 'Worldexplorer',
-        detail: 'Für dieses Studienprojekt habe ich eine Website entwickelt, wo man die Weltkarte entdecken kann. Es ist ein interaktives Spiel, das mit Flutter und Dart erstellt wurde.',
         technologies: 'Flutter, Dart',
-        roles: 'Entwicklerin - Einzelarbeit',
         link: 'https://worldexplorer.selmasahin.ch',
+        digezzLink: 'https://www.digezz.ch/worldexplorer/'
     }
 ]);
 
 const overlayVisible = ref(false);
-const selectedProject = ref<Project>({
-    title: '',
-    year: '',
-    description: '',
-    detail: '',
-    technologies: '',
-    roles: '',
-    link: '',
-    video: '',
-    images: [] as string[],
-});
+const selectedProject = ref<SelectedProject | null>(null);
 
 const openOverlay = (project: Project) => {
-    selectedProject.value = { ...project, images: project.images || [] };
+    selectedProject.value = {
+        ...project,
+        title: t(`projects.${project.key}.title`),
+        description: t(`projects.${project.key}.description`),
+        detail: t(`projects.${project.key}.detail`),
+        roles: t(`projects.${project.key}.roles`),
+    };
     overlayVisible.value = true;
 };
 
 const closeOverlay = () => {
     overlayVisible.value = false;
-    selectedProject.value = {
-        title: '',
-        year: '',
-        description: '',
-        detail: '',
-        technologies: '',
-        roles: '',
-        link: '',
-        video: '',
-        images: [],
-    };
+    selectedProject.value = null;
 };
 
 onMounted(() => {
-    // Use nextTick to ensure DOM is fully rendered
     nextTick(() => {
-        const projectCards = document.querySelectorAll('.projects-grid > div');
-
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        const index = Array.from(projectCards).indexOf(entry.target as Element);
-                        const delay = index * 200;
-
-                        setTimeout(() => {
-                            entry.target.classList.add('visible');
-                        }, delay);
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
                     }
                 });
             },
             {
-                threshold: 0.2,
+                rootMargin: '0px',
+                threshold: 0.1,
             }
         );
 
-        // Observe all project cards
-        projectCards.forEach((card) => {
-            observer.observe(card);
-        });
+        const elements = document.querySelectorAll('.project-card-item');
+        elements.forEach((el) => observer.observe(el));
     });
 });
 </script>
@@ -218,21 +194,23 @@ onMounted(() => {
     }
 }
 
-.projects-grid>div {
+
+.project-card-item {
     opacity: 0;
     transform: translateY(50px);
     animation: none;
 }
 
-.projects-grid>div.visible {
+.project-card-item.visible {
     opacity: 1;
     transform: translateY(0);
     animation: fadeInUp 0.8s ease-in-out forwards;
 }
 
-.projects-grid>div.visible:hover {
+.project-card-item.visible:hover {
     transform: translateY(-10px);
 }
+
 
 .overlay {
     position: fixed;

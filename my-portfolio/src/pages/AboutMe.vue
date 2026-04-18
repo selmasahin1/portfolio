@@ -4,14 +4,14 @@
         <div class="background-layer"></div>
         <div class="about-me">
             <div class="portrait-container" @click="flipPortrait">
-                <Portrait :image="currentPortrait?.image || aboutMeImg" :text="currentPortrait?.text || 'Selma Sahin'"
-                    class="portrait-item" :style="{ transform: `rotateY(${rotationDegrees}deg)` }" />
+                <Portrait v-if="currentPortrait" :image="currentPortrait.image" :text="currentPortrait.text"
+                    :show-click-me="true" class="portrait-item"
+                    :style="{ transform: `rotateY(${rotationDegrees}deg)` }" />
             </div>
 
             <div v-if="currentPortraitIndex === 0" class="content-section">
-                <h2>That's me</h2>
-                <p>Ich bin Creative Developerin und verbinde mit meinem Background als Informatikerin und dem
-                    MMP-Studium "The Best of Both Worlds"</p>
+                <h2>{{ t('about.title') }}</h2>
+                <p>{{ t('about.text') }}</p>
                 <div class="linkedin">
                     <a :href="linkedInUrl" target="_blank" rel="noopener noreferrer">
                         <img src="../assets/linkedin.png" alt="Link to Linkedin" class="linkedin-img" />
@@ -19,9 +19,8 @@
                 </div>
             </div>
             <div v-if="currentPortraitIndex === 1" class="content-section">
-                <h2>MMP-Things</h2>
-                <p>In meinem Multimedia-Production-Studium habe ich verschiedenste Programme und Skills gelernt.
-                    Unter anderem:</p>
+                <h2>{{ t('about.mmpTitle') }}</h2>
+                <p>{{ t('about.mmpText') }}</p>
                 <ul>
                     <li>Premiere Pro</li>
                     <li>InDesign</li>
@@ -34,9 +33,8 @@
             </div>
 
             <div v-if="currentPortraitIndex === 2" class="content-section">
-                <h2>Programmierstuff</h2>
-                <p>In meiner Lehre sowie im Studium konnte ich mir einige Frameworks sowie Programmiersprachen
-                    aneignen.</p>
+                <h2>{{ t('about.devTitle') }}</h2>
+                <p>{{ t('about.devText') }}</p>
                 <ul>
                     <li>Vue/Nuxt</li>
                     <li>React</li>
@@ -54,7 +52,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n';
 import NavMenu from '@/components/NavMenu.vue'
 import Portrait from '@/components/portrait.vue'
 import Footer from '@/components/Footer.vue'
@@ -62,15 +61,16 @@ import aboutMeImg from '../assets/aboutMe1.webp'
 import aboutMeImg3 from '../assets/aboutMe3.webp'
 import ImBild from '../assets/IM.webp'
 
-const portraits = [
-    { image: aboutMeImg, text: 'Selma Sahin' },
-    { image: aboutMeImg3, text: 'MMP-Studentin' },
-    { image: ImBild, text: 'Entwicklerin' }
+const { t } = useI18n();
 
-]
+const portraits = computed(() => [
+    { image: aboutMeImg, text: t('about.portrait.p1') },
+    { image: aboutMeImg3, text: t('about.portrait.p2') },
+    { image: ImBild, text: t('about.portrait.p3') }
+]);
 
 const currentPortraitIndex = ref(0)
-const currentPortrait = ref(portraits[0])
+const currentPortrait = computed(() => portraits.value[currentPortraitIndex.value])
 const isFlipping = ref(false)
 const rotationDegrees = ref(0)
 const linkedInUrl = 'https://www.linkedin.com/in/selma-sahin-9bb1a3292/'
@@ -85,8 +85,7 @@ const flipPortrait = () => {
 
     // After half the animation (180 degrees), switch to next portrait
     setTimeout(() => {
-        currentPortraitIndex.value = (currentPortraitIndex.value + 1) % portraits.length
-        currentPortrait.value = portraits[currentPortraitIndex.value]
+        currentPortraitIndex.value = (currentPortraitIndex.value + 1) % portraits.value.length
     }, 400)
 
     // Reset animation flag after animation
