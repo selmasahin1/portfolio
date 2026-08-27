@@ -36,7 +36,6 @@ defineProps({
 .project-image {
     width: 150px;
     height: 150px;
-    object-fit: cover;
 }
 
 .project-info {

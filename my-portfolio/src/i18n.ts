@@ -33,11 +33,17 @@ const messages = {
         detail: 'Unser Spiel bringt die Dynamik von „Fangen“ in die digitale Welt – über eine App, die die reale Stadt zur interaktiven Spielfläche macht. Spieler:innen bewegen sich in Echtzeit auf einer Karte, nehmen Rollen ein (Runner vs. Catcher), absolvieren Challenges per Kamera und GPS und sammeln Punkte. Über eine moderne PWA mit Live-Standort entsteht ein bewegungsintensives, soziales und wettbewerbsorientiertes Spielerlebnis – schweizweit, sofort spielbar, komplett per Smartphone.',
         roles: 'Lead Developer - Teamarbeit',
       },
+      sync: {
+        title: 'Webapp',
+        description: 'Sync',
+        detail: 'Sync enstand im Rahmen meiner Bachelorarbeit. Es ist eine Webapp, wo man bekannte Filmclips mit Freunden nachsynchronisieren kann. Mit der eigenen Stimme im Karaoke Style. Die App ist nicht öffentlich zugänglich.',
+        roles: 'Design, Entwicklerin - Einzelarbeit',
+      },
       psbackup: {
         title: 'Website',
         description: 'Physio & Sport BackUp',
         detail: 'Entwicklung und Gestaltung der Website für Physio & Sport BackUp',
-        roles: 'Entwicklerin - Einzelarbeit',
+        roles: 'Design, Entwicklerin - Einzelarbeit',
       },
       mh9: {
         title: 'Film',
@@ -49,13 +55,13 @@ const messages = {
         title: 'IOS App',
         description: 'Photoswiper',
         detail: 'Dieses Projekt habe ich erstellt um meine Fähigkeiten in der iOS-Entwicklung zu verbessern. Die App ermöglicht es Benutzern, durch ihre Fotos zu swipen und sie zu organisieren indem sie sie entweder behalten oder löschen. Es ist eine einfache, aber effektive Lösung, um die Fotoverwaltung auf iOS-Geräten zu erleichtern.',
-        roles: 'Entwicklerin - Einzelarbeit',
+        roles: 'Design, Entwicklerin - Einzelarbeit',
       },
       worldexplorer: {
         title: 'Game',
         description: 'Worldexplorer',
         detail: 'Für dieses Studienprojekt habe ich eine Website entwickelt, wo man die Weltkarte entdecken kann. Es ist ein interaktives Spiel, das mit Flutter und Dart erstellt wurde.',
-        roles: 'Entwicklerin - Einzelarbeit',
+        roles: 'Design, Entwicklerin - Einzelarbeit',
       },
       overlay: {
         description: 'Beschreibung:',
@@ -104,6 +110,12 @@ const messages = {
         description: 'fangis',
         detail: 'Our game brings the dynamics of "catch" into the digital world - via an app that turns the real city into an interactive playing field. Players move around a map in real time, take on roles (runner vs. catcher), complete challenges via camera and GPS and collect points. A modern PWA with live location creates a movement-intensive, social and competitive gaming experience - throughout Switzerland, immediately playable, completely via smartphone.',
         roles: 'Lead Developer - Teamwork',
+      },
+      sync: {
+        title: 'Webapp',
+        description: 'Sync',
+        detail: 'Sync was created as part of my bachelor thesis. It is a web app where you can dub known movie clips with friends. With your own voice in karaoke style. The app is not publicly accessible.',
+        roles: 'Design, Developer - Individual work',
       },
       psbackup: {
         title: 'Website',

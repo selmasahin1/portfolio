@@ -2,6 +2,7 @@
     <div class="page-root">
         <NavMenu />
         <div class="background-layer"></div>
+        <h1 class="mobile-page-title">Selma Sahin</h1>
         <div class="intro-text">
             <p>Get to know me</p>
             <a href="#content" class="arrow-link">
@@ -120,7 +121,7 @@ onMounted(() => {
     padding: 100px;
     display: flex;
     flex-wrap: wrap;
-    gap: 100px;
+    gap: clamp(0.5rem, 3vw, 6rem);
     justify-content: center;
     z-index: 60;
     background-color: transparent !important;
@@ -142,14 +143,34 @@ onMounted(() => {
 }
 
 .spacer {
-    height: 50vh;
+    height: 10vh;
 }
 
-@media (max-width: 768px) {
+.mobile-page-title {
+    display: none;
+}
+
+@media (max-width: 924px) {
+
+    .mobile-page-title {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 500;
+        padding: 0 20px;
+        color: var(--Black);
+        font-family: 'Caveat', cursive;
+        font-size: 48px;
+        text-align: center;
+    }
 
     .background-layer {
         background-size: cover;
-        background-position: left top;
+        background-position: right bottom;
+        background-image: url('../assets/TitleMobile.webp');
+        margin-top: 30px;
     }
 
     .intro-text {

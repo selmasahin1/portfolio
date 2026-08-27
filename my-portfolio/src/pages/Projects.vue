@@ -2,36 +2,45 @@
     <div class="page-root">
         <NavMenu />
         <div class="background-layer"></div>
+        <h1 class="mobile-page-title">{{ t('nav.projects') }}</h1>
         <div class="projects-grid">
             <ProjectCard v-for="(project, index) in projects" :key="index" :image="project.images && project.images[0]"
-                :title="t(`projects.${project.key}.title`)" :description="t(`projects.${project.key}.description`)" @click="openOverlay(project)" class="project-card-item" />
+                :title="t(`projects.${project.key}.title`)" :description="t(`projects.${project.key}.description`)"
+                @click="openOverlay(project)" class="project-card-item" />
         </div>
         <div v-if="overlayVisible && selectedProject" class="overlay" @click="closeOverlay">
             <div class="overlay-content" @click.stop>
                 <button class="close-btn" @click="closeOverlay">×</button>
-                <h2>{{ selectedProject.description }} ({{ selectedProject.year }})</h2>
-                <br />
-                <p><strong>{{ t('projects.overlay.description') }}</strong> {{ selectedProject.detail }}</p>
-                <br />
-                <p><strong>{{ t('projects.overlay.technologies') }}</strong> {{ selectedProject.technologies }}</p>
-                <br />
-                <p><strong>{{ t('projects.overlay.roles') }}</strong> {{ selectedProject.roles }}</p>
-                <br />
-                <p v-if="selectedProject.link">
-                    <strong>{{ t('projects.overlay.projectLink') }}</strong> <a :href="selectedProject.link" target="_blank">{{
-                        selectedProject.link }}</a><br><br>
-                </p>
-                <p v-if="selectedProject.digezzLink">
-                    <strong>{{ t('projects.overlay.digezzLink') }}</strong> <a :href="selectedProject.digezzLink" target="_blank">{{
-                        selectedProject.digezzLink }}</a>
-                </p>
-                <iframe v-if="selectedProject.video"
-                    :src="`https://www.youtube-nocookie.com/embed/${selectedProject.video}`" class="overlay-video"
-                    frameborder="0" allowfullscreen>
-                </iframe>
-                <div v-else-if="selectedProject.images && selectedProject.images.length > 1" class="overlay-images">
-                    <img v-for="(image, index) in selectedProject.images.slice(1)" :key="index" :src="image"
-                        alt="Project Media" class="overlay-image" />
+                <div class="overlay-body">
+                    <div class="overlay-text">
+                        <h2>{{ selectedProject.description }} ({{ selectedProject.year }})</h2>
+                        <br />
+                        <p><strong>{{ t('projects.overlay.description') }}</strong> {{ selectedProject.detail }}</p>
+                        <br />
+                        <p><strong>{{ t('projects.overlay.technologies') }}</strong> {{ selectedProject.technologies }}</p>
+                        <br />
+                        <p><strong>{{ t('projects.overlay.roles') }}</strong> {{ selectedProject.roles }}</p>
+                        <br />
+                        <p v-if="selectedProject.link">
+                            <strong>{{ t('projects.overlay.projectLink') }}</strong> <a :href="selectedProject.link"
+                                target="_blank">{{
+                                    selectedProject.link }}</a><br><br>
+                        </p>
+                        <p v-if="selectedProject.digezzLink">
+                            <strong>{{ t('projects.overlay.digezzLink') }}</strong> <a :href="selectedProject.digezzLink"
+                                target="_blank">{{
+                                    selectedProject.digezzLink }}</a>
+                        </p>
+                        <iframe v-if="selectedProject.video"
+                            :src="`https://www.youtube-nocookie.com/embed/${selectedProject.video}`" class="overlay-video"
+                            frameborder="0" allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div v-if="!selectedProject.video && selectedProject.images && selectedProject.images.length > 1"
+                        class="overlay-images">
+                        <img v-for="(image, index) in selectedProject.images.slice(1)" :key="index" :src="image"
+                            alt="Project Media" class="overlay-image" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,6 +61,10 @@ import mh9Img from '../assets/mh9.webp'
 import appIconImg from '../assets/appicon.webp'
 import swipeKeepImg from '../assets/swipekeep.gif'
 import swipeDeleteImg from '../assets/swipedelete.gif'
+import syncImg from '../assets/Logo_Dark.svg'
+import fangisScreens from '../assets/fangisScreens.png'
+import worldexplorerScreens from '../assets/worldexplorerScreens.png'
+import syncScreens from '../assets/syncScreens.png'
 
 const { t } = useI18n();
 
@@ -75,10 +88,17 @@ interface SelectedProject extends Project {
 const projects = ref<Project[]>([
     {
         key: 'fangis',
-        images: [fangisImg],
+        images: [fangisImg, fangisScreens],
         year: '2025',
-        technologies: 'Vue.js, Node.js',
+        technologies: 'Vue/Nuxt, Supabase, Vercel',
         link: 'https://fangis.app',
+    },
+    {
+        key: 'sync',
+        images: [syncImg, syncScreens],
+        year: '2026',
+        technologies: 'Vue/Nuxt, Neon, Vercel',
+        link: 'https://sync-silk-delta.vercel.app/',
     },
     {
         key: 'psbackup',
@@ -104,7 +124,7 @@ const projects = ref<Project[]>([
     },
     {
         key: 'worldexplorer',
-        images: [worldexplorerImg],
+        images: [worldexplorerImg, worldexplorerScreens],
         year: '2025',
         technologies: 'Flutter, Dart',
         link: 'https://worldexplorer.selmasahin.ch',
@@ -231,8 +251,21 @@ onMounted(() => {
     background: var(--Beige);
     padding: 20px;
     border-radius: 8px;
-    max-width: 800px;
+    max-width: 1100px;
     position: relative;
+}
+
+.overlay-body {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+    align-items: center;
+}
+
+.overlay-text {
+    flex: 1 1 50%;
+    min-width: 0;
 }
 
 .close-btn {
@@ -260,12 +293,6 @@ onMounted(() => {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.overlay-content img {
-    max-width: 200px;
-    border-radius: 8px;
-    margin-top: 10px;
-}
-
 .overlay-video {
     width: 100%;
     height: 50vh;
@@ -279,19 +306,51 @@ onMounted(() => {
     flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    align-content: center;
+    flex: 1 1 50%;
+    min-width: 0;
 }
 
-.overlay-image {
-    max-height: 30vh;
+.overlay-images img {
+    max-width: 100%;
+    max-height: 40vh;
+    object-fit: contain;
     border-radius: 8px;
 }
 
-@media (max-width: 768px) {
+.overlay-image {
+    width: auto;
+    max-width: 450px;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.mobile-page-title {
+    display: none;
+}
+
+@media (max-width: 924px) {
+
+    .mobile-page-title {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 2;
+        padding: 0 20px;
+        color: var(--Black);
+        font-family: 'Caveat', cursive;
+        font-size: 48px;
+        text-align: center;
+    }
 
     .background-layer {
         background-size: cover;
-        background-position: left top;
+        background-position: right bottom;
+        background-image: url('../assets/ProjectsMobile.webp');
+
     }
 
     .project-card {
@@ -301,6 +360,22 @@ onMounted(() => {
     .projects-grid {
         gap: 20px;
         padding-bottom: 20px;
+    }
+
+    .overlay-body {
+        flex-direction: column;
+    }
+
+    .overlay-text,
+    .overlay-images {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .overlay-image {
+        flex: 1 1 140px;
+        max-width: 45%;
+        max-height: 30vh;
     }
 }
 </style>

@@ -37,6 +37,7 @@ const toggleLanguage = () => {
     padding: 10px 20px;
     font-family: "Noto Sans Display", sans-serif;
     font-size: 14px;
+    bottom: 0;
 }
 
 .footer-links {

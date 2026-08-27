@@ -2,6 +2,7 @@
     <div class="page-root">
         <NavMenu />
         <div class="background-layer"></div>
+        <h1 class="mobile-page-title">{{ t('nav.about') }}</h1>
         <div class="about-me">
             <div class="portrait-container" @click="flipPortrait">
                 <Portrait v-if="currentPortrait" :image="currentPortrait.image" :text="currentPortrait.text"
@@ -208,6 +209,11 @@ onMounted(() => {
     height: 430px;
 }
 
+
+.mobile-page-title {
+    display: none;
+}
+
 @keyframes flipAnimation {
     from {
         transform: rotateY(0deg);
@@ -218,16 +224,31 @@ onMounted(() => {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 924px) {
 
     .background-layer {
         background-size: cover;
-        background-position: left top;
+        background-position: left bottom;
+        background-image: url('../assets/AboutMeMobile.webp');
     }
 
     .about-me {
         padding-top: 300px;
         flex-direction: column;
+    }
+
+    .mobile-page-title {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 60;
+        padding: 0 20px;
+        color: var(--Black);
+        font-family: 'Caveat', cursive;
+        font-size: 48px;
+        text-align: center;
     }
 
 }

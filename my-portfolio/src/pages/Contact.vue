@@ -2,10 +2,11 @@
     <div class="page-root">
         <NavMenu />
         <div class="background-layer"></div>
+        <h1 class="mobile-page-title">{{ t('contact.title') }}</h1>
 
         <div class="contact-content">
             <div class="left">
-                <p>{{ t('contact.title') }}</p>
+                <p>Let's get in touch</p>
                 <a href="#content" class="arrow-link" @click="focusNameInput">
                     <img src="../assets/arrow_right.svg" alt="right arrow" />
                 </a>
@@ -14,11 +15,13 @@
             <div class="right">
                 <form @submit.prevent="submitForm" class="contact-form">
 
-                    <AnimatedInput ref="nameInput" v-model="formData.name" :label="t('contact.name')" :required="true" />
+                    <AnimatedInput ref="nameInput" v-model="formData.name" :label="t('contact.name')"
+                        :required="true" />
 
                     <AnimatedInput v-model="formData.email" :label="t('contact.email')" type="email" :required="true" />
 
-                    <AnimatedTextarea v-model="formData.message" :label="t('contact.message')" :rows="5" :required="true" />
+                    <AnimatedTextarea v-model="formData.message" :label="t('contact.message')" :rows="5"
+                        :required="true" />
 
                     <input v-model="hp" class="hp-field" tabindex="-1" autocomplete="off" />
 
@@ -59,6 +62,7 @@ const loadTime = ref(0)
 
 const sending = ref(false)
 const status = ref("")
+const contactEndpoint = "https://selmasahin.ch/sendmail.php"
 
 onMounted(() => {
     loadTime.value = Date.now()
@@ -69,32 +73,34 @@ async function submitForm() {
     status.value = ""
 
     const spent = Date.now() - loadTime.value
-    const form = new FormData()
+    try {
+        const form = new FormData()
+        form.append("name", formData.value.name)
+        form.append("email", formData.value.email)
+        form.append("message", formData.value.message)
+        form.append("hp", hp.value)
+        form.append("loadTime", spent.toString())
 
-    form.append("name", formData.value.name)
-    form.append("email", formData.value.email)
-    form.append("message", formData.value.message)
-    form.append("hp", hp.value)
-    form.append("loadTime", spent.toString())
+        const res = await fetch(contactEndpoint, {
+            method: "POST",
+            body: form
+        })
 
-    const res = await fetch("https://selmasahin.ch/sendmail.php", {
-        method: "POST",
-        body: form
-    })
+        const result = (await res.text()).trim()
 
-    const result = await res.text()
-
-    switch (result) {
-        case "OK":
+        if (res.ok && result === "OK") {
             status.value = "Nachricht erfolgreich gesendet!"
             formData.value = { name: "", email: "", message: "" }
-            break
-        default:
+            hp.value = ""
+            loadTime.value = Date.now()
+        } else {
             status.value = `Nachricht konnte nicht gesendet werden. Bitte versuche es später erneut.`
-            break
+        }
+    } catch {
+        status.value = `Nachricht konnte nicht gesendet werden. Bitte versuche es später erneut.`
+    } finally {
+        sending.value = false
     }
-
-    sending.value = false
 }
 </script>
 
@@ -208,12 +214,32 @@ async function submitForm() {
     font-size: 1rem;
 }
 
+.mobile-page-title {
+    display: none;
+}
 
-@media (max-width: 768px) {
+
+@media (max-width: 924px) {
+
+    .mobile-page-title {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 2;
+        padding: 0 20px;
+        color: var(--Black);
+        font-family: 'Caveat', cursive;
+        font-size: 48px;
+        text-align: center;
+    }
 
     .background-layer {
         background-size: cover;
-        background-position: left top;
+        background-position: right top;
+        margin-top: 20px;
+        background-image: url('../assets/ContactMobile.webp');
     }
 
     .left {

@@ -1,78 +1,90 @@
 <?php
-// SECURITY: Allow only POST
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    http_response_code(405);
-    exit("METHOD_NOT_ALLOWED");
+header('Content-Type: text/plain; charset=utf-8');
+ini_set('display_errors', '0');
+
+// Allow same-site usage for production origin only.
+$allowedOrigins = [
+  'https://selmasahin.ch',
+];
+
+if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowedOrigins, true)) {
+  header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+  header('Vary: Origin');
+  header('Access-Control-Allow-Methods: POST, OPTIONS');
+  header('Access-Control-Allow-Headers: Content-Type');
 }
 
-// SECURITY: Rate-limiting (per IP)
-session_start();
-if (!isset($_SESSION['last_submit'])) {
-    $_SESSION['last_submit'] = 0;
-}
-if (time() - $_SESSION['last_submit'] < 10) { 
-    exit("RATE_LIMIT");
-}
-$_SESSION['last_submit'] = time();
-
-// Collect data
-$name = trim($_POST["name"] ?? "");
-$email = trim($_POST["email"] ?? "");
-$message = trim($_POST["message"] ?? "");
-$honeypot = trim($_POST["hp"] ?? "");
-$loadTime = intval($_POST["loadTime"] ?? 0);
-
-// ✅ 1. Honeypot (invisible field bots fill)
-if (!empty($honeypot)) {
-    exit("OK"); // pretend success, discard
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+  http_response_code(204);
+  exit;
 }
 
-// ✅ 2. Ensure human time (bots submit immediately)
-if ($loadTime < 1500) { // less than 1.5 seconds
-    exit("BOT");
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+  http_response_code(405);
+  echo 'ERROR';
+  exit;
 }
 
-// ✅ 3. Basic validation
-if (strlen($name) < 2 || strlen($name) > 80) exit("INVALID_NAME");
-if (strlen($message) < 5 || strlen($message) > 2000) exit("INVALID_MESSAGE");
+function clean_header_value($value) {
+  return str_replace(["\r", "\n"], '', trim((string)$value));
+}
 
-// ✅ 4. Email validation
-$email = filter_var($email, FILTER_SANITIZE_EMAIL);
+$name = clean_header_value($_POST['name'] ?? '');
+$email = clean_header_value($_POST['email'] ?? '');
+$phone = clean_header_value($_POST['phone'] ?? '');
+$message = trim((string)($_POST['message'] ?? ''));
+$website = trim((string)($_POST['website'] ?? ($_POST['hp'] ?? '')));
+$loadTime = (int)($_POST['loadTime'] ?? 0);
+
+if ($website !== '') {
+  echo 'OK';
+  exit;
+}
+
+if ($loadTime > 0 && $loadTime < 2000) {
+  echo 'OK';
+  exit;
+}
+
+if ($name === '' || $email === '' || $message === '') {
+  http_response_code(422);
+  echo 'ERROR';
+  exit;
+}
+
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    exit("INVALID_EMAIL");
+  http_response_code(422);
+  echo 'ERROR';
+  exit;
 }
 
-// ✅ 5. Send email via secure file logging
-try {
-    // Create a secure log file outside web root or with protection
-    $logMessage = date('Y-m-d H:i:s') . " - New Contact Form Submission\n";
-    $logMessage .= "Name: " . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "\n";
-    $logMessage .= "Email: " . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . "\n"; 
-    $logMessage .= "Message: " . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . "\n";
-    $logMessage .= "IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . "\n";
-    $logMessage .= "User Agent: " . htmlspecialchars($_SERVER['HTTP_USER_AGENT'] ?? 'unknown', ENT_QUOTES, 'UTF-8') . "\n";
-    $logMessage .= "---\n\n";
-    
-    // Use a hidden directory or file with .htaccess protection
-    $logDir = './private/';
-    $logFile = $logDir . 'contact_' . date('Y-m') . '.log';
-    
-    // Create directory if it doesn't exist
-    if (!is_dir($logDir)) {
-        mkdir($logDir, 0750, true);
-        // Create .htaccess to deny web access
-        file_put_contents($logDir . '.htaccess', "Deny from all\n");
-    }
-    
-    $written = file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
-    
-    if ($written !== false) {
-        exit("OK");
-    } else {
-        exit("LOG_FAILED");
-    }
-    
-} catch (Exception $e) {
-    exit("ERROR: " . $e->getMessage());
+$to = 's.sahin@bluewin.ch';
+$subject = 'Neue Kontaktanfrage von der Website';
+$body = "Neue Nachricht von selmasahin.ch\n\n";
+$body .= "Name: {$name}\n";
+$body .= "E-Mail: {$email}\n";
+$body .= "Telefon: " . ($phone !== '' ? $phone : '-') . "\n\n";
+$body .= "Nachricht:\n{$message}\n";
+
+$headers = [
+  'From: Selma Sahin Website <noreply@selmasahin.ch>',
+  "Reply-To: {$email}",
+  'Content-Type: text/plain; charset=UTF-8',
+  'X-Mailer: PHP/' . phpversion(),
+];
+
+if (!function_exists('mail')) {
+  http_response_code(500);
+  echo 'ERROR';
+  exit;
 }
-?>
+
+$sent = mail($to, $subject, $body, implode("\r\n", $headers));
+
+if (!$sent) {
+  http_response_code(500);
+  echo 'ERROR';
+  exit;
+}
+
+echo 'OK';

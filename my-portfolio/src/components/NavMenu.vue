@@ -91,7 +91,7 @@ const closeMenu = () => {
     color: var(--Blue);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 924px) {
     .burger-menu {
         display: block;
     }
